@@ -10,7 +10,7 @@ import exception.SqlUpdateException;
 
 public class DbConnector {
   
-  private DataSource dataSource;
+  private DataSource dataSource = new DefaultDataSource();
 
   
   public void setDataSource(DataSource source) {
@@ -38,7 +38,7 @@ public class DbConnector {
     }
   }
 
-  public int update(Connection conn, String sql, Object... params) {
+  public int executeUpdate(Connection conn, String sql, Object... params) {
     try (PreparedStatement ps = getSql(conn, sql, params)) {
       return ps.executeUpdate();
     } catch (SQLException e) {

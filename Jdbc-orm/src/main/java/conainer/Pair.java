@@ -11,7 +11,6 @@ public class Pair<A, B> {
 
   public Pair(A first, B second) {
     Objects.requireNonNull(first);
-    Objects.requireNonNull(second);
     this.first = first;
     this.second = second;
   }

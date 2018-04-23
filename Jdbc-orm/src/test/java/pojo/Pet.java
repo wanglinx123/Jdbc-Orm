@@ -1,8 +1,9 @@
 package pojo;
 
 import java.util.Date;
+import annotation.JoinColumn;
 import annotation.Relation;
-import static enumeration.EntityRelationType.*;
+import static enumeration.EntityRelationEnum.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class Pet {
   private Date birthday;
 
   @Relation(Many2One)
+  @JoinColumn("userid")
   private User user;
 
   public Pet(String name, Date birthday) {
