@@ -3,8 +3,9 @@ package reflection;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Set;
 
-public class FieldReflction {
+public class FieldReflctionUtil {
 
   public static Class<?> getGenericType(Field field) {
     return (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
@@ -18,7 +19,8 @@ public class FieldReflction {
    * @return
    */
   public static Class<?> getBeanTypeOfField(Field field) {
-    if (field.getType() == List.class) return getGenericType(field);
-    return field.getType();
+    Class<?> cls = field.getType();
+    if (cls == List.class || cls == Set.class) return getGenericType(field);
+    return cls;
   }
 }

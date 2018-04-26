@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import enumeration.EntityRelationEnum;
 import exception.ResultSetInjectionException;
-import reflection.MethodReflection;
-import sqlBuilder.SqlParams;
+import reflection.MethodReflectionUtil;
+import sqlBuilder.SqlParamsUtil;
 
 public class IResultSetObjectCreatorImpl implements IResultSetObjectCreator {
 
@@ -27,10 +27,10 @@ public class IResultSetObjectCreatorImpl implements IResultSetObjectCreator {
         T obj = clz.newInstance();
 
         for (Field field : fields) {
-          if (SqlParams.isRelationField(field)) continue;
+          if (SqlParamsUtil.isRelationField(field)) continue;
           String fieldName = field.getName();
           Object value = rs.getObject(fieldName);
-          MethodReflection.setValue(obj, fieldName, value);
+          MethodReflectionUtil.setValue(obj, fieldName, value);
         }
 
         result.add(obj);

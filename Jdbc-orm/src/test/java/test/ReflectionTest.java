@@ -3,7 +3,7 @@ package test;
 import java.util.Date;
 import org.junit.Test;
 import pojo.Pet;
-import reflection.MethodReflection;
+import reflection.MethodReflectionUtil;
 
 public class ReflectionTest {
   
@@ -11,7 +11,7 @@ public class ReflectionTest {
   
   @Test
   public void getValue_test() {
-    Object obj =  MethodReflection.getValue(new Pet("zhi", new Date()), "birthday");
+    Object obj =  MethodReflectionUtil.getValue(new Pet("zhi", new Date()), "birthday");
     java.sql.Date date = new java.sql.Date(new Date().getTime());
     System.out.println(date.toLocalDate() ); 
     System.out.println(obj.getClass() );

@@ -2,22 +2,21 @@ package database;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import reflection.MethodReflection;
+import lombok.SneakyThrows;
+import reflection.MethodReflectionUtil;
 
 /**
  * Inject Relational Object (List or Single Object) into target Object.
  *
  */
-public class RelationObjectInjector {
+public class IRelationObjectInjectorImpl implements IRelationObjectInjector{
 
+  @SneakyThrows
+  @Override
   public <T> void injectObject(T obj, Field field, Object relation) {
     if (relation == null) return;
 
-    try {
-      Method setter = MethodReflection.setterOf(field, obj.getClass());
+      Method setter = MethodReflectionUtil.setterOf(field, obj.getClass());
       setter.invoke(obj, relation);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 }

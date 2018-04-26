@@ -4,13 +4,13 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import database.RelationObjectInjector;
+import database.IRelationObjectInjectorImpl;
 import pojo.Pet;
 import pojo.User;
 
 public class InjectionTest {
   
-  private RelationObjectInjector injector = new RelationObjectInjector();
+  private IRelationObjectInjectorImpl injector = new IRelationObjectInjectorImpl();
   @Test
   public void injectWithListTest() throws NoSuchFieldException, SecurityException {
     User user = new User();

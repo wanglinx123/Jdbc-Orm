@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import exception.NoGetterException;
 import exception.NoSetterException;
 
-public class MethodReflection {
+public class MethodReflectionUtil {
 
   public static <T> void setValue(T obj, String fieldName, Object value) {
     try {

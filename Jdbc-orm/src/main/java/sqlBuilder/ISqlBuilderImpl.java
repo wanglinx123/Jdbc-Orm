@@ -9,11 +9,11 @@ import conainer.Pair;
 public class ISqlBuilderImpl{
   
   public <T> String selectSql(T obj) throws Exception {
-    Map<String, String> map = SqlParams.nonNullParams(obj);
+    Map<String, String> map = SqlParamsUtil.nonNullParams(obj);
 
     StringBuilder sb =
         new StringBuilder("select * from ")
-            .append(SqlParams.getTableName(obj))
+            .append(SqlParamsUtil.getTableName(obj))
             .append(" where ")
             .append(keyValSqlParams(map, " and "))
             .append(" 1 = 1");
@@ -22,10 +22,10 @@ public class ISqlBuilderImpl{
   }
   
   public <T> String deleteSql(T obj) throws Exception{
-    Pair<String, Object> idPair = SqlParams.getPrimaryKey(obj);
+    Pair<String, Object> idPair = SqlParamsUtil.getPrimaryKey(obj);
     
     StringBuilder sb = new StringBuilder("delete from ")
-            .append(SqlParams.getTableName(obj))
+            .append(SqlParamsUtil.getTableName(obj))
             .append(" where ")
             .append(idPair.getFirst()).append("=").append(idPair.getSecond());
     
@@ -33,9 +33,9 @@ public class ISqlBuilderImpl{
   }
 
   public <T> String updateSql(T obj) throws Exception {
-    Map<String, String> map = SqlParams.nonRelationParams(obj);
+    Map<String, String> map = SqlParamsUtil.nonRelationParams(obj);
     String keyVal = keyValSqlParams(map, ",");
-    Pair<String, Object> pkPair = SqlParams.getPrimaryKey(obj);
+    Pair<String, Object> pkPair = SqlParamsUtil.getPrimaryKey(obj);
     String pkName = pkPair.getFirst();
     Object pkVal = pkPair.getSecond();
     Objects.requireNonNull(pkVal, "primary key cannot be null in update sql");
@@ -51,7 +51,7 @@ public class ISqlBuilderImpl{
   }
   
   public <T> String insertSql(T obj) throws Exception {
-    Map<String, String> map = SqlParams.nonRelationParams(obj);
+    Map<String, String> map = SqlParamsUtil.nonRelationParams(obj);
     StringBuilder params = new StringBuilder(" (");
     StringBuilder values = new StringBuilder(" values (");
     
@@ -65,7 +65,7 @@ public class ISqlBuilderImpl{
     
     StringBuilder sb =
         new StringBuilder("insert into ")
-            .append(SqlParams.getTableName(obj))
+            .append(SqlParamsUtil.getTableName(obj))
             .append(p).append(v);
     
     return sb.toString();

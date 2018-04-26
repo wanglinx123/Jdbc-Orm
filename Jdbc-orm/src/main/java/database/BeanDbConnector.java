@@ -6,18 +6,19 @@ import java.sql.ResultSet;
 import java.util.List;
 import enumeration.EntityRelationEnum;
 import enumeration.SqlTypeEnum;
-import reflection.FieldReflction;
+import lombok.SneakyThrows;
+import reflection.FieldReflctionUtil;
 import relationQuery.RelationSqlBuilderFacetFacet;
 import static enumeration.SqlTypeEnum.*;
 import sqlBuilder.SqlBuilderFacet;
-import sqlBuilder.SqlParams;
+import sqlBuilder.SqlParamsUtil;
 
 public class BeanDbConnector extends DbConnector implements IDbVisitor {
 
   private IResultSetObjectCreator rsObjCreator = new IResultSetObjectCreatorImpl();
   private SqlBuilderFacet sqlBuilder = new SqlBuilderFacet();
   private RelationSqlBuilderFacetFacet relationSqlBuilder = new RelationSqlBuilderFacetFacet();
-  private RelationObjectInjector injector = new RelationObjectInjector();
+  private IRelationObjectInjector injector = new IRelationObjectInjectorImpl();
 
   public <T> T selectOne(T obj) {
     List<T> result = select(obj);
@@ -25,13 +26,9 @@ public class BeanDbConnector extends DbConnector implements IDbVisitor {
     return result.size() == 1 ? result.get(0) : null;
   }
 
+  @SneakyThrows
   public <T> List<T> selectAll(Class<T> clz){
-    try {
       return select(clz.newInstance());
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException();
-    }
   }
 
   @Override
@@ -50,7 +47,7 @@ public class BeanDbConnector extends DbConnector implements IDbVisitor {
 
   //do: get all relation fields and (do sth.) for each relation field.
   private <T> void queryRelationFields(List<T> objs, Class<T> objClz, Connection conn) {
-    List<Field> relationFields = SqlParams.relationFields(objClz);
+    List<Field> relationFields = SqlParamsUtil.relationFields(objClz);
 
     for (Field eachField : relationFields) {
       handleSingleRelation(objs, eachField, conn);
@@ -58,7 +55,7 @@ public class BeanDbConnector extends DbConnector implements IDbVisitor {
   }
 
   private <T> void handleSingleRelation(List<T> objs, Field relationField, Connection conn) {
-    EntityRelationEnum relationEnum = SqlParams.getRelationTypeEnum(relationField);
+    EntityRelationEnum relationEnum = SqlParamsUtil.getRelationTypeEnum(relationField);
     for (T eachObj : objs) {
       //query
       String relationSql =
@@ -68,7 +65,7 @@ public class BeanDbConnector extends DbConnector implements IDbVisitor {
       //create object
       Object relationObj =
           rsObjCreator.createRelationResultSetObjects(
-              relationRs, FieldReflction.getBeanTypeOfField(relationField), relationEnum);
+              relationRs, FieldReflctionUtil.getBeanTypeOfField(relationField), relationEnum);
       //inject
       injector.injectObject(eachObj, relationField, relationObj);
     }

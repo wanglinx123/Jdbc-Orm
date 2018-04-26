@@ -14,9 +14,9 @@ import conainer.Pair;
 import enumeration.EntityRelationEnum;
 import exception.NoIdAnnotationException;
 import exception.NoJoinColumnException;
-import reflection.MethodReflection;
+import reflection.MethodReflectionUtil;
 
-public class SqlParams {
+public class SqlParamsUtil {
 
   private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
@@ -36,7 +36,7 @@ public class SqlParams {
 
     for (Field f : fields) {
       if (isRelationField(f)) continue;
-      Object val = MethodReflection.getValue(obj, f);
+      Object val = MethodReflectionUtil.getValue(obj, f);
       if (val instanceof Date) val = formatter.format(val);
       if (val instanceof String) val = String.format("'%s'", val);
       result.put(f.getName(), val == null ? "null" : val.toString());
@@ -93,7 +93,7 @@ public class SqlParams {
     try {
       for (Field f : fields) {
         if (isPrimaryKey(f))
-          pair = new Pair<String, Object>(f.getName(), MethodReflection.getValue(obj, f));
+          pair = new Pair<String, Object>(f.getName(), MethodReflectionUtil.getValue(obj, f));
       }
       if(pair == null) throw new NoIdAnnotationException(obj.getClass().getName());
       return pair;

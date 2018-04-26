@@ -2,17 +2,17 @@ package relationQuery;
 
 import java.lang.reflect.Field;
 import conainer.Pair;
-import reflection.FieldReflction;
-import sqlBuilder.SqlParams;
+import reflection.FieldReflctionUtil;
+import sqlBuilder.SqlParamsUtil;
 
 public class IRelationSqlGeneratorImpl implements IRelationSqlGenerator{
 
   @Override
   public <T> String one2ManySql(T obj, Field field) {
-    String column = SqlParams.getJoinColumn(field);
-    String oneIdVal = SqlParams.getPrimaryKeyValue(obj);
-    Class<?> refClz = FieldReflction.getGenericType(field);
-    String joinTable = SqlParams.getTableName(refClz);
+    String column = SqlParamsUtil.getJoinColumn(field);
+    String oneIdVal = SqlParamsUtil.getPrimaryKeyValue(obj);
+    Class<?> refClz = FieldReflctionUtil.getGenericType(field);
+    String joinTable = SqlParamsUtil.getTableName(refClz);
 
     StringBuilder sb =
         new StringBuilder("select * from  ")
@@ -28,12 +28,12 @@ public class IRelationSqlGeneratorImpl implements IRelationSqlGenerator{
   @Override
   public <T> String many2OneSql(T obj, Field field) {
     Class<?> refClz = field.getType();
-    String joinPk = SqlParams.getPrimaryKeyName(refClz);
-    String tarTable = SqlParams.getTableName(refClz);
-    String srcTalbe = SqlParams.getTableName(obj);
+    String joinPk = SqlParamsUtil.getPrimaryKeyName(refClz);
+    String tarTable = SqlParamsUtil.getTableName(refClz);
+    String srcTalbe = SqlParamsUtil.getTableName(obj);
     
-    String fk = SqlParams.getJoinColumn(field);
-    Pair<String, Object> pk =  SqlParams.getPrimaryKey(obj);
+    String fk = SqlParamsUtil.getJoinColumn(field);
+    Pair<String, Object> pk =  SqlParamsUtil.getPrimaryKey(obj);
     
     //select tar.*
     // from a src inner join b tar
@@ -53,14 +53,14 @@ public class IRelationSqlGeneratorImpl implements IRelationSqlGenerator{
   @Override
   public <T> String one2OneSql(T obj, Field field) {
     Class<?> tarClz = field.getType();
-    String tarTable = SqlParams.getTableName(tarClz);
-    String srcTalbe = SqlParams.getTableName(obj);
+    String tarTable = SqlParamsUtil.getTableName(tarClz);
+    String srcTalbe = SqlParamsUtil.getTableName(obj);
     
-    String fkTable = SqlParams.getJoinTable(field);
+    String fkTable = SqlParamsUtil.getJoinTable(field);
     if(fkTable == null) fkTable = srcTalbe;
     
-    String fk = SqlParams.getJoinColumn(field);
-    Pair<String, Object> srcIdPair = SqlParams.getPrimaryKey(obj);
+    String fk = SqlParamsUtil.getJoinColumn(field);
+    Pair<String, Object> srcIdPair = SqlParamsUtil.getPrimaryKey(obj);
     String srcId = srcIdPair.getFirst();
     
     StringBuilder sb = new StringBuilder("select tar.* from ")
@@ -69,7 +69,7 @@ public class IRelationSqlGeneratorImpl implements IRelationSqlGenerator{
     
     //fk can be in either src table or tar table
     if(srcTalbe.equalsIgnoreCase(fkTable)) {
-      sb.append(fk).append("=tar.").append(SqlParams.getPrimaryKeyName(tarClz));
+      sb.append(fk).append("=tar.").append(SqlParamsUtil.getPrimaryKeyName(tarClz));
     }else {
       sb.append(srcId).append("=tar.").append(fk);
     }
