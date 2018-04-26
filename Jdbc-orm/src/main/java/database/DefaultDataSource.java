@@ -7,6 +7,6 @@ public class DefaultDataSource extends MysqlDataSource {
     setUrl("jdbc:mysql://localhost:3306/pet");
     setEncoding("utf-8");
     setUser("root");
-    setPassword("1995may16th");
+    setPassword("root");
   }
 }
